@@ -8,6 +8,7 @@ package snowballword
 
 import (
 	"fmt"
+	"unicode/utf8"
 )
 
 // SnowballWord represents a word that is going to be stemmed.
@@ -209,20 +210,31 @@ func (w *SnowballWord) FirstPrefix(prefixes ...string) (foundPrefix string, foun
 // That is, the slice of runes between startPos and endPos have a suffix of
 // suffixRunes.
 //
-func (w *SnowballWord) HasSuffixRunesIn(startPos, endPos int, suffixRunes []rune) bool {
+func (w *SnowballWord) HasSuffixRunesIn(startPos, endPos int, suffix string) bool {
 	maxLen := endPos - startPos
-	suffixLen := len(suffixRunes)
+	suffixLen := utf8.RuneCountInString(suffix)
 	if suffixLen > maxLen {
 		return false
 	}
 
-	numMatching := 0
-	for i := 0; i < maxLen && i < suffixLen; i++ {
-		if w.RS[endPos-i-1] != suffixRunes[suffixLen-i-1] {
+	var (
+		r rune
+		n int
+		i = 0
+		numMatching = 0
+	)
+	for {
+		r, n = utf8.DecodeLastRuneInString(suffix)
+		if n == 0 || r == utf8.RuneError && i >= maxLen {
+			break
+		}
+		suffix = suffix[:len(suffix) - n]
+		if w.RS[endPos-i-1] != r {
 			break
 		} else {
 			numMatching += 1
 		}
+		i++
 	}
 	if numMatching == suffixLen {
 		return true
@@ -230,13 +242,13 @@ func (w *SnowballWord) HasSuffixRunesIn(startPos, endPos int, suffixRunes []rune
 	return false
 }
 
-// Return true if `w` ends with `suffixRunes`
+// HasSuffixRunes Return true if `w` ends with `suffixRunes`
 //
 func (w *SnowballWord) HasSuffixRunes(suffixRunes []rune) bool {
-	return w.HasSuffixRunesIn(0, len(w.RS), suffixRunes)
+	return w.HasSuffixRunesIn(0, len(w.RS), string(suffixRunes))
 }
 
-// Find the first suffix that ends at `endPos` in the word among
+// FirstSuffixIfIn Find the first suffix that ends at `endPos` in the word among
 // those provided; then,
 // check to see if it begins after startPos.  If it does, return
 // it, else return the empty string and empty rune slice.  This
@@ -245,35 +257,30 @@ func (w *SnowballWord) HasSuffixRunes(suffixRunes []rune) bool {
 // stemmer steps.
 //
 func (w *SnowballWord) FirstSuffixIfIn(startPos, endPos int, suffixes ...string) (suffix string, suffixRunes []rune) {
-	for _, suffix := range suffixes {
-		suffixRunes := []rune(suffix)
-		if w.HasSuffixRunesIn(0, endPos, suffixRunes) {
-			if endPos-len(suffixRunes) >= startPos {
+	for i := 0; i < len(suffixes); i ++ {
+		suffix = suffixes[i]
+		if w.HasSuffixRunesIn(0, endPos, suffix) {
+			if endPos-utf8.RuneCountInString(suffix) >= startPos {
+				suffixRunes = []rune(suffix)
 				return suffix, suffixRunes
 			} else {
-				// Empty out suffixRunes
 				suffixRunes = suffixRunes[:0]
 				return "", suffixRunes
 			}
 		}
 	}
-
-	// Empty out suffixRunes
 	suffixRunes = suffixRunes[:0]
 	return "", suffixRunes
 }
 
 func (w *SnowballWord) FirstSuffixIn(startPos, endPos int, suffixes ...string) (suffix string, suffixRunes []rune) {
 	for _, suffix := range suffixes {
-		suffixRunes := []rune(suffix)
-		if w.HasSuffixRunesIn(startPos, endPos, suffixRunes) {
+		if w.HasSuffixRunesIn(startPos, endPos, suffix) {
+			suffixRunes = []rune(suffix)
 			return suffix, suffixRunes
 		}
 	}
-
-	// Empty out suffixRunes
-	suffixRunes = suffixRunes[:0]
-	return "", suffixRunes
+	return
 }
 
 // Find the first suffix in the word among those provided; then,
