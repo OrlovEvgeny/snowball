@@ -9,12 +9,12 @@ import (
 //
 func step2(w *snowballword.SnowballWord) bool {
 
-	suffix, suffixRunes := w.FirstSuffix(
+	suffix, suffixRunesSize := w.FirstSuffix(
 		"dd", "gd", "nn", "dt", "gt", "kt", "tt",
 	)
 
 	// If it is not in R1, do nothing
-	if suffix == "" || len(suffixRunes) > len(w.RS)-w.R1start {
+	if suffix == "" || suffixRunesSize > len(w.RS)-w.R1start {
 		return false
 	}
 	w.RemoveLastNRunes(1)

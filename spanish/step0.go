@@ -9,7 +9,7 @@ import (
 func step0(word *snowballword.SnowballWord) bool {
 
 	// Search for the longest among the following suffixes
-	suffix1, suffix1Runes := word.FirstSuffixIn(word.RVstart, len(word.RS),
+	suffix1, suffix1RunesSize := word.FirstSuffixIn(word.RVstart, len(word.RS),
 		"selas", "selos", "sela", "selo", "las", "les",
 		"los", "nos", "me", "se", "la", "le", "lo",
 	)
@@ -20,7 +20,7 @@ func step0(word *snowballword.SnowballWord) bool {
 	}
 
 	// We'll remove suffix1, if comes after one of the following
-	suffix2, suffix2Runes := word.FirstSuffixIn(word.RVstart, len(word.RS)-len(suffix1),
+	suffix2, suffix2RunesSize := word.FirstSuffixIn(word.RVstart, len(word.RS)-len(suffix1),
 		"iéndo", "iendo", "yendo", "ando", "ándo",
 		"ár", "ér", "ír", "ar", "er", "ir",
 	)
@@ -48,12 +48,12 @@ func step0(word *snowballword.SnowballWord) bool {
 		case "ír":
 			suffix2repl = "ir"
 		}
-		word.RemoveLastNRunes(len(suffix1Runes))
-		word.ReplaceSuffixRunes(suffix2Runes, []rune(suffix2repl), true)
+		word.RemoveLastNRunes(suffix1RunesSize)
+		word.ReplaceSuffixRunes(suffix2, suffix2RunesSize, []rune(suffix2repl), true)
 		return true
 
 	case "ando", "iendo", "ar", "er", "ir":
-		word.RemoveLastNRunes(len(suffix1Runes))
+		word.RemoveLastNRunes(suffix1RunesSize)
 		return true
 
 	case "yendo":
@@ -65,7 +65,7 @@ func step0(word *snowballword.SnowballWord) bool {
 
 			// Note, the unicode code point for "u" is 117.
 			if word.RS[i] == 117 {
-				word.RemoveLastNRunes(len(suffix1Runes))
+				word.RemoveLastNRunes(suffix1RunesSize)
 				return true
 			}
 		}

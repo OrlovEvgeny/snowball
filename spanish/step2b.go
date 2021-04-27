@@ -9,7 +9,7 @@ import (
 // in RV, and if found, delete if preceded by u.
 //
 func step2b(word *snowballword.SnowballWord) bool {
-	suffix, suffixRunes := word.FirstSuffixIn(word.RVstart, len(word.RS),
+	suffix, suffixRunesSize := word.FirstSuffixIn(word.RVstart, len(word.RS),
 		"iésemos", "iéramos", "iríamos", "eríamos", "aríamos", "ásemos",
 		"áramos", "ábamos", "isteis", "iríais", "iremos", "ieseis",
 		"ierais", "eríais", "eremos", "asteis", "aríais", "aremos",
@@ -31,7 +31,7 @@ func step2b(word *snowballword.SnowballWord) bool {
 	case "en", "es", "éis", "emos":
 
 		// Delete, and if preceded by gu delete the u (the gu need not be in RV)
-		word.RemoveLastNRunes(len(suffixRunes))
+		word.RemoveLastNRunes(suffixRunesSize)
 		guSuffix, _ := word.FirstSuffix("gu")
 		if guSuffix != "" {
 			word.RemoveLastNRunes(1)
@@ -40,7 +40,7 @@ func step2b(word *snowballword.SnowballWord) bool {
 	default:
 
 		// Delete
-		word.RemoveLastNRunes(len(suffixRunes))
+		word.RemoveLastNRunes(suffixRunesSize)
 	}
 	return true
 }

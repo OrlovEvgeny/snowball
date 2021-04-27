@@ -17,14 +17,14 @@ import (
 func step4(w *snowballword.SnowballWord) bool {
 
 	// Find all endings in R1
-	suffix, suffixRunes := w.FirstSuffix(
+	suffix, suffixRunesSize := w.FirstSuffix(
 		"ement", "ance", "ence", "able", "ible", "ment",
 		"ent", "ant", "ism", "ate", "iti", "ous", "ive",
 		"ize", "ion", "al", "er", "ic",
 	)
 
 	// If it does not fit in R2, do nothing.
-	if len(suffixRunes) > len(w.RS)-w.R2start {
+	if suffixRunesSize > len(w.RS)-w.R2start {
 		return false
 	}
 
@@ -40,7 +40,7 @@ func step4(w *snowballword.SnowballWord) bool {
 		if rsLen >= 4 {
 			switch w.RS[rsLen-4] {
 			case 115, 116:
-				w.RemoveLastNRunes(len(suffixRunes))
+				w.RemoveLastNRunes(suffixRunesSize)
 				return true
 			}
 
@@ -49,7 +49,7 @@ func step4(w *snowballword.SnowballWord) bool {
 	}
 
 	// Handle basic replacements
-	w.RemoveLastNRunes(len(suffixRunes))
+	w.RemoveLastNRunes(suffixRunesSize)
 	return true
 
 }

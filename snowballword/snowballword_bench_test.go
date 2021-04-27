@@ -25,18 +25,30 @@ func Benchmark_FirstSuffixIfIn(b *testing.B) {
 		{"firehose", 1, 5, []string{"ireh", "fireh", "h"}, "ireh"},
 	}
 
+	w := New("firehose")
 	b.ResetTimer()
 	b.ReportAllocs()
-	w := New("firehose")
 	for n := 0; n < b.N; n++ {
-		for caseN, tc := range testCases {
-			suffix, _ := w.FirstSuffixIfIn(tc.startPos, tc.endPos, tc.suffixes...)
-			if suffix != tc.suffix {
-				b.Errorf("case #%d, Expected \"{%v}\" but got \"{%v}\"", caseN, tc.suffix, suffix)
-			}
+		for _, tc := range testCases {
+			w.FirstSuffixIfIn(tc.startPos, tc.endPos, tc.suffixes...)
 		}
 	}
 }
 
+/**
+goos: darwin
+goarch: amd64
+cpu: Intel(R) Core(TM) i5-8279U CPU @ 2.40GHz
+Benchmark_FirstSuffixIfIn-8      2426738               476.0 ns/op            56 B/op          4 allocs/op
 
+ */
+
+
+/**
+goos: darwin
+goarch: amd64
+cpu: Intel(R) Core(TM) i5-8279U CPU @ 2.40GHz
+Benchmark_FirstSuffixIfIn-8      1408310               728.3 ns/op             0 B/op          0 allocs/op
+
+ */
 

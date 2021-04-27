@@ -26,7 +26,7 @@ func step5(w *snowballword.SnowballWord) bool {
 		// Delete "e" suffix if in R2, or in R1 and not preceded
 		// by a short syllable.
 		if w.R2start <= lri || !endsShortSyllable(w, lri) {
-			w.ReplaceSuffix("e", "", true)
+			w.ReplaceSuffix("e", 1, "", true)
 			return true
 		}
 		return false
@@ -37,7 +37,7 @@ func step5(w *snowballword.SnowballWord) bool {
 		// in R2. (Note, the unicode code point for "l" is 108.)
 
 		// Delete the second "l".
-		w.ReplaceSuffix("l", "", true)
+		w.ReplaceSuffix("l", 1, "", true)
 		return true
 
 	}

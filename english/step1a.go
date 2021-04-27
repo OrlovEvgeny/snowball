@@ -8,13 +8,13 @@ import (
 //
 func step1a(w *snowballword.SnowballWord) bool {
 
-	suffix, suffixRunes := w.FirstSuffix("sses", "ied", "ies", "us", "ss", "s")
+	suffix, suffixRunesSize := w.FirstSuffix("sses", "ied", "ies", "us", "ss", "s")
 	switch suffix {
 
 	case "sses":
 
 		// Replace by ss
-		w.ReplaceSuffixRunes(suffixRunes, []rune("ss"), true)
+		w.ReplaceSuffixRunes(suffix, suffixRunesSize, []rune("ss"), true)
 		return true
 
 	case "ies", "ied":
@@ -28,7 +28,7 @@ func step1a(w *snowballword.SnowballWord) bool {
 		} else {
 			repl = "ie"
 		}
-		w.ReplaceSuffixRunes(suffixRunes, []rune(repl), true)
+		w.ReplaceSuffixRunes(suffix, suffixRunesSize, []rune(repl), true)
 		return true
 
 	case "us", "ss":
@@ -44,7 +44,7 @@ func step1a(w *snowballword.SnowballWord) bool {
 		//
 		for i := 0; i < len(w.RS)-2; i++ {
 			if isLowerVowel(w.RS[i]) {
-				w.RemoveLastNRunes(len(suffixRunes))
+				w.RemoveLastNRunes(suffixRunesSize)
 				return true
 			}
 		}

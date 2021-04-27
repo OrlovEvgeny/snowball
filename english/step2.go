@@ -10,7 +10,7 @@ import (
 func step2(w *snowballword.SnowballWord) bool {
 
 	// Possible sufficies for this step, longest first.
-	suffix, suffixRunes := w.FirstSuffix(
+	suffix, suffixRunesSize := w.FirstSuffix(
 		"ational", "fulness", "iveness", "ization", "ousness",
 		"biliti", "lessli", "tional", "alism", "aliti", "ation",
 		"entli", "fulli", "iviti", "ousli", "anci", "abli",
@@ -18,7 +18,7 @@ func step2(w *snowballword.SnowballWord) bool {
 	)
 
 	// If it is not in R1, do nothing
-	if suffix == "" || len(suffixRunes) > len(w.RS)-w.R1start {
+	if suffix == "" || suffixRunesSize > len(w.RS)-w.R1start {
 		return false
 	}
 
@@ -39,7 +39,7 @@ func step2(w *snowballword.SnowballWord) bool {
 		if rsLen >= 3 {
 			switch w.RS[rsLen-3] {
 			case 99, 100, 101, 103, 104, 107, 109, 110, 114, 116:
-				w.RemoveLastNRunes(len(suffixRunes))
+				w.RemoveLastNRunes(suffixRunesSize)
 				return true
 			}
 		}
@@ -52,7 +52,7 @@ func step2(w *snowballword.SnowballWord) bool {
 		//
 		rsLen := len(w.RS)
 		if rsLen >= 4 && w.RS[rsLen-4] == 108 {
-			w.ReplaceSuffixRunes(suffixRunes, []rune("og"), true)
+			w.ReplaceSuffixRunes(suffix, suffixRunesSize, []rune("og"), true)
 		}
 		return true
 	}
@@ -91,7 +91,7 @@ func step2(w *snowballword.SnowballWord) bool {
 	case "lessli":
 		repl = "less"
 	}
-	w.ReplaceSuffixRunes(suffixRunes, []rune(repl), true)
+	w.ReplaceSuffixRunes(suffix, suffixRunesSize, []rune(repl), true)
 	return true
 
 }

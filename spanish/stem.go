@@ -2,15 +2,8 @@ package spanish
 
 import (
 	"github.com/kljensen/snowball/snowballword"
-	"log"
 	"strings"
 )
-
-func printDebug(debug bool, w *snowballword.SnowballWord) {
-	if debug {
-		log.Println(w.DebugString())
-	}
-}
 
 // Stem an Spanish word.  This is the only exported
 // function in this package.

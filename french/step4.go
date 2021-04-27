@@ -37,7 +37,7 @@ func step4(word *snowballword.SnowballWord) bool {
 
 	// Search for the longest among the following suffixes in RV.
 	//
-	suffix, suffixRunes := word.FirstSuffixIn(word.RVstart, len(word.RS),
+	suffix, suffixRunesSize := word.FirstSuffixIn(word.RVstart, len(word.RS),
 		"Ière", "ière", "Ier", "ier", "ion", "e", "ë",
 	)
 
@@ -60,7 +60,7 @@ func step4(word *snowballword.SnowballWord) bool {
 
 	case "ier", "ière", "Ier", "Ière":
 		// Replace with i
-		word.ReplaceSuffixRunes(suffixRunes, []rune("i"), true)
+		word.ReplaceSuffixRunes(suffix, suffixRunesSize, []rune("i"), true)
 		return true
 
 	case "e":

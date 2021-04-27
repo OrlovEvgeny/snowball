@@ -17,7 +17,7 @@ func step1(w *snowballword.SnowballWord) bool {
 	}
 
 	// Using FirstSuffixIn since there are overlapping suffixes, where some might not be in the R1,
-	suffix, suffixRunes := w.FirstSuffixIn(w.R1start, len(w.RS), suffixes...)
+	suffix, suffixRunesSize := w.FirstSuffixIn(w.R1start, len(w.RS), suffixes...)
 
 	if suffix == "s" {
 		// Delete if preceded by a valid s-ending. Valid s-endings inlude the
@@ -29,11 +29,11 @@ func step1(w *snowballword.SnowballWord) bool {
 			case 'b', 'c', 'd', 'f', 'g', 'h', 'j',
 				'l', 'm', 'n', 'o', 'p', 'r', 't', 'v', 'y', 'z':
 
-				w.RemoveLastNRunes(len(suffixRunes))
+				w.RemoveLastNRunes(suffixRunesSize)
 				return true
 			case 'k':
 				if !isLowerVowel(w.RS[rsLen-3]) {
-					w.RemoveLastNRunes(len(suffixRunes))
+					w.RemoveLastNRunes(suffixRunesSize)
 					return true
 				}
 			}
@@ -43,18 +43,18 @@ func step1(w *snowballword.SnowballWord) bool {
 	}
 
 	// Remove the suffix
-	w.RemoveLastNRunes(len(suffixRunes))
+	w.RemoveLastNRunes(suffixRunesSize)
 
 	// replace "erte" and "ert" with "er"
-	suffix, suffixRunes = w.FirstSuffix(
+	suffix, suffixRunesSize = w.FirstSuffix(
 		"erte", "ert",
 	)
 
-	if suffix == "" || len(suffixRunes) > len(w.RS)-w.R1start {
+	if suffix == "" || suffixRunesSize > len(w.RS)-w.R1start {
 		return false
 	}
 
-	w.ReplaceSuffixRunes(suffixRunes, []rune("er"), true)
+	w.ReplaceSuffixRunes(suffix, suffixRunesSize, []rune("er"), true)
 
 	return true
 }

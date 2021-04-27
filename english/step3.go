@@ -9,13 +9,13 @@ import (
 //
 func step3(w *snowballword.SnowballWord) bool {
 
-	suffix, suffixRunes := w.FirstSuffix(
+	suffix, suffixRunesSize := w.FirstSuffix(
 		"ational", "tional", "alize", "icate", "ative",
 		"iciti", "ical", "ful", "ness",
 	)
 
 	// If it is not in R1, do nothing
-	if suffix == "" || len(suffixRunes) > len(w.RS)-w.R1start {
+	if suffix == "" || suffixRunesSize > len(w.RS)-w.R1start {
 		return false
 	}
 
@@ -28,7 +28,7 @@ func step3(w *snowballword.SnowballWord) bool {
 		// If in R2, delete.
 		//
 		if len(w.RS)-w.R2start >= 5 {
-			w.RemoveLastNRunes(len(suffixRunes))
+			w.RemoveLastNRunes(suffixRunesSize)
 			return true
 		}
 		return false
@@ -50,7 +50,7 @@ func step3(w *snowballword.SnowballWord) bool {
 	case "ful", "ness":
 		repl = ""
 	}
-	w.ReplaceSuffixRunes(suffixRunes, []rune(repl), true)
+	w.ReplaceSuffixRunes(suffix, suffixRunesSize, []rune(repl), true)
 	return true
 
 }

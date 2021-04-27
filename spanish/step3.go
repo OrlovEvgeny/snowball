@@ -7,7 +7,7 @@ import (
 // Step 3 is the removal of residual suffixes.
 //
 func step3(word *snowballword.SnowballWord) bool {
-	suffix, suffixRunes := word.FirstSuffixIfIn(word.RVstart, len(word.RS),
+	suffix, suffixRunesSize := word.FirstSuffixIfIn(word.RVstart, len(word.RS),
 		"os", "a", "o", "á", "í", "ó", "e", "é",
 	)
 
@@ -18,7 +18,7 @@ func step3(word *snowballword.SnowballWord) bool {
 	}
 
 	// Remove all these suffixes
-	word.RemoveLastNRunes(len(suffixRunes))
+	word.RemoveLastNRunes(suffixRunesSize)
 
 	if suffix == "e" || suffix == "é" {
 

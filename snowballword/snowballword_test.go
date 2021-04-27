@@ -1,6 +1,9 @@
 package snowballword
 
-import "testing"
+import (
+	"testing"
+	"unicode/utf8"
+)
 
 func Test_New(t *testing.T) {
 	w := New("kyle")
@@ -96,7 +99,7 @@ func Test_ReplaceSuffixRunes(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		w := New(tc.input)
-		w.ReplaceSuffixRunes([]rune(tc.suffix), []rune(tc.repl), tc.force)
+		w.ReplaceSuffixRunes(tc.suffix, utf8.RuneCountInString(tc.suffix), []rune(tc.repl), tc.force)
 		if w.String() != tc.output {
 			t.Errorf("Expected %v -> \"%v\", but got \"%v\"", tc.input, tc.output, w.String())
 		}
@@ -123,7 +126,7 @@ func Test_ReplaceSuffix(t *testing.T) {
 		w := New(tc.input)
 		w.R1start = tc.r1start
 		w.R2start = tc.r2start
-		w.ReplaceSuffix(tc.suffix, tc.repl, true)
+		w.ReplaceSuffix(tc.suffix, utf8.RuneCountInString(tc.suffix), tc.repl, true)
 		if w.String() != tc.output || w.R1String() != tc.outputR1String || w.R2String() != tc.outputR2String {
 			t.Errorf("Expected %v -> \"{%v, %v, %v}\" but got \"{%v, %v, %v}\"", tc.input, tc.output, tc.outputR1String, tc.outputR2String, w.String(), w.R1String(), w.R2String())
 		}

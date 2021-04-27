@@ -11,7 +11,7 @@ func step2b(word *snowballword.SnowballWord) bool {
 
 	// Search for the longest among the following suffixes in RV.
 	//
-	suffix, suffixRunes := word.FirstSuffixIn(word.RVstart, len(word.RS),
+	suffix, suffixRunesSize := word.FirstSuffixIn(word.RVstart, len(word.RS),
 		"eraIent", "assions", "erions", "assiez", "assent",
 		"èrent", "eront", "erons", "eriez", "erait", "erais",
 		"asses", "antes", "aIent", "âtes", "âmes", "ions",
@@ -24,9 +24,8 @@ func step2b(word *snowballword.SnowballWord) bool {
 	case "ions":
 
 		// Delete if in R2
-		suffixLen := len(suffixRunes)
-		if word.FitsInR2(suffixLen) {
-			word.RemoveLastNRunes(suffixLen)
+		if word.FitsInR2(suffixRunesSize) {
+			word.RemoveLastNRunes(suffixRunesSize)
 			return true
 		}
 		return false
@@ -36,7 +35,7 @@ func step2b(word *snowballword.SnowballWord) bool {
 		"eriez", "erions", "erons", "eront", "ez", "iez":
 
 		// Delete
-		word.RemoveLastNRunes(len(suffixRunes))
+		word.RemoveLastNRunes(suffixRunesSize)
 		return true
 
 	case "âmes", "ât", "âtes", "a", "ai", "aIent",
@@ -44,7 +43,7 @@ func step2b(word *snowballword.SnowballWord) bool {
 		"asse", "assent", "asses", "assiez", "assions":
 
 		// Delete
-		word.RemoveLastNRunes(len(suffixRunes))
+		word.RemoveLastNRunes(suffixRunesSize)
 
 		// If preceded by e (unicode code point 101), delete
 		//
