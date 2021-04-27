@@ -14,7 +14,7 @@ func step4(word *snowballword.SnowballWord) bool {
 	// remove it.
 
 	// Undouble "н"
-	if word.HasSuffixRunes([]rune("нн")) {
+	if word.HasSuffixRunes("нн") {
 		word.RemoveLastNRunes(1)
 		return true
 	}
@@ -23,7 +23,7 @@ func step4(word *snowballword.SnowballWord) bool {
 	suffix, _ := word.RemoveFirstSuffix("ейше", "ейш")
 	if suffix != "" {
 		// Undouble "н"
-		if word.HasSuffixRunes([]rune("нн")) {
+		if word.HasSuffixRunes("нн") {
 			word.RemoveLastNRunes(1)
 		}
 		return true

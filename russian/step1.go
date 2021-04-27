@@ -58,7 +58,7 @@ func step1(word *snowballword.SnowballWord) bool {
 // Remove perfective gerund endings and return true if one was removed.
 //
 func removePerfectiveGerundEnding(word *snowballword.SnowballWord) bool {
-	suffix, suffixRunes := word.FirstSuffixIn(word.RVstart, len(word.RS),
+	suffix, suffixRunesSize := word.FirstSuffixIn(word.RVstart, len(word.RS),
 		"ившись", "ывшись", "вшись", "ивши", "ывши", "вши", "ив", "ыв", "в",
 	)
 	switch suffix {
@@ -66,14 +66,14 @@ func removePerfectiveGerundEnding(word *snowballword.SnowballWord) bool {
 
 		// These are "Group 1" perfective gerund endings.
 		// Group 1 endings must follow а (a) or я (ia) in RV.
-		if precededByARinRV(word, len(suffixRunes)) == false {
+		if precededByARinRV(word, suffixRunesSize) == false {
 			suffix = ""
 		}
 
 	}
 
 	if suffix != "" {
-		word.RemoveLastNRunes(len(suffixRunes))
+		word.RemoveLastNRunes(suffixRunesSize)
 		return true
 	}
 	return false
@@ -95,7 +95,7 @@ func removeAdjectivalEnding(word *snowballword.SnowballWord) bool {
 
 		// We found an adjective ending.  Remove optional participle endings.
 		//
-		newSuffix, newSuffixRunes := word.FirstSuffixIn(word.RVstart, len(word.RS),
+		newSuffix, newSuffixRunesSize := word.FirstSuffixIn(word.RVstart, len(word.RS),
 			"ивш", "ывш", "ующ",
 			"ем", "нн", "вш", "ющ", "щ",
 		)
@@ -104,13 +104,13 @@ func removeAdjectivalEnding(word *snowballword.SnowballWord) bool {
 
 			// These are "Group 1" participle endings.
 			// Group 1 endings must follow а (a) or я (ia) in RV.
-			if precededByARinRV(word, len(newSuffixRunes)) == false {
+			if precededByARinRV(word, newSuffixRunesSize) == false {
 				newSuffix = ""
 			}
 		}
 
 		if newSuffix != "" {
-			word.RemoveLastNRunes(len(newSuffixRunes))
+			word.RemoveLastNRunes(newSuffixRunesSize)
 		}
 		return true
 	}
@@ -120,7 +120,7 @@ func removeAdjectivalEnding(word *snowballword.SnowballWord) bool {
 // Remove verb endings and return true if one was removed.
 //
 func removeVerbEnding(word *snowballword.SnowballWord) bool {
-	suffix, suffixRunes := word.FirstSuffixIn(word.RVstart, len(word.RS),
+	suffix, suffixRunesSize := word.FirstSuffixIn(word.RVstart, len(word.RS),
 		"уйте", "ейте", "ыть", "ыло", "ыли", "ыла", "уют", "ует",
 		"нно", "йте", "ишь", "ить", "ите", "ило", "или", "ила",
 		"ешь", "ете", "ены", "ено", "ена", "ят", "ют", "ыт", "ым",
@@ -133,14 +133,14 @@ func removeVerbEnding(word *snowballword.SnowballWord) bool {
 
 		// These are "Group 1" verb endings.
 		// Group 1 endings must follow а (a) or я (ia) in RV.
-		if precededByARinRV(word, len(suffixRunes)) == false {
+		if precededByARinRV(word, suffixRunesSize) == false {
 			suffix = ""
 		}
 
 	}
 
 	if suffix != "" {
-		word.RemoveLastNRunes(len(suffixRunes))
+		word.RemoveLastNRunes(suffixRunesSize)
 		return true
 	}
 	return false
