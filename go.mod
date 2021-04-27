@@ -1,3 +1,3 @@
-module github.com/OrlovEvgeny/snowball
+module github.com/kljensen/snowball
 
 go 1.15
