@@ -176,27 +176,35 @@ func (w *SnowballWord) DebugString() string {
 	return fmt.Sprintf("{\"%s\", %d, %d, %d}", w.String(), w.R1start, w.R2start, w.RVstart)
 }
 
-// Return the first prefix found or the empty string.
-func (w *SnowballWord) FirstPrefix(prefixes ...string) (foundPrefix string, foundPrefixRunes []rune) {
+// FirstPrefix Return the first prefix found or the empty string.
+func (w *SnowballWord) FirstPrefix(prefixes ...string) (foundPrefix string, foundPrefixSize int) {
 	found := false
 	rsLen := len(w.RS)
 
 	for _, prefix := range prefixes {
-		prefixRunes := []rune(prefix)
-		if len(prefixRunes) > rsLen {
+		prefixRunesSize := utf8.RuneCountInString(prefix)
+		if prefixRunesSize > rsLen {
 			continue
 		}
-
 		found = true
-		for i, r := range prefixRunes {
+		i := 0
+		nRead := 0
+		for {
+			r, n := utf8.DecodeRuneInString(prefix[nRead:])
+			if n == 0 || r == utf8.RuneError {
+				break
+			}
+			nRead += n
 			if i > rsLen-1 || (w.RS)[i] != r {
 				found = false
 				break
 			}
+			i++
 		}
+
 		if found {
 			foundPrefix = prefix
-			foundPrefixRunes = prefixRunes
+			foundPrefixSize = prefixRunesSize
 			break
 		}
 	}

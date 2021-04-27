@@ -41,8 +41,7 @@ goarch: amd64
 cpu: Intel(R) Core(TM) i5-8279U CPU @ 2.40GHz
 Benchmark_FirstSuffixIfIn-8      2426738               476.0 ns/op            56 B/op          4 allocs/op
 
- */
-
+*/
 
 /**
 goos: darwin
@@ -50,5 +49,4 @@ goarch: amd64
 cpu: Intel(R) Core(TM) i5-8279U CPU @ 2.40GHz
 Benchmark_FirstSuffixIfIn-8      1408310               728.3 ns/op             0 B/op          0 allocs/op
 
- */
-
+*/

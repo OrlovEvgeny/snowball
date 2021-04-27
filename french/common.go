@@ -117,9 +117,9 @@ func findRegions(word *snowballword.SnowballWord) (r1start, r2start, rvstart int
 
 	// Handle the three special cases: "par", "col", & "tap"
 	//
-	prefix, prefixRunes := word.FirstPrefix("par", "col", "tap")
+	prefix, prefixRunesSize := word.FirstPrefix("par", "col", "tap")
 	if prefix != "" {
-		rvstart = len(prefixRunes)
+		rvstart = prefixRunesSize
 		return
 	}
 
